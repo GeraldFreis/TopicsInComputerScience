@@ -62,7 +62,7 @@ for i in range(0, len(prediction_training)):
         prediction_training[i] = 0
 # print(prediction_training)
 raw_data["CNN_Predictions"] = prediction_training
-raw_data.drop(columns=["Unnamed: 0"])
+raw_data.drop(columns=["Unnamed: 0"], inplace=True)
 raw_data.to_csv("IMDB_with_predictions.csv", index=False)
 print(raw_data)
 

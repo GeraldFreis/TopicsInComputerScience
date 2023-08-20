@@ -68,4 +68,4 @@ for i in range(1, 90):
         best_test_accuracy = test_prediction_accuracy;
         best_i=i
 
-print("Best depth was: {} with {}".format(i, best_test_accuracy))
+print("Best depth was: {} with {}".format(best_i, best_test_accuracy))
