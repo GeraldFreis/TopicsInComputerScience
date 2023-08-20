@@ -9,7 +9,7 @@
 ->SentimentDTFalse.py
 
 - A DT was trained to predict the CNN's predictions and achieved a max accuracy of 0.57 with a depth of 2
--> Find DT in InterpretabilityDT.py
+-> InterpretabilityDT.py
 
 ## Dependencies:
 * Tensorflow 2.11.0 and Keras 2.11.0
