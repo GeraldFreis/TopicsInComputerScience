@@ -24,7 +24,7 @@ tokenizer = Tokenizer(num_words=number_of_words_in_dic) # to tokenize the words 
 tokenizer.fit_on_texts(training_x)
 tokenized_training_x = tokenizer.texts_to_sequences(training_x)
 tokenized_testing_x = tokenizer.texts_to_sequences(testing_x)
-
+print(tokenized_training_x[0])
 vocab_size = len(tokenizer.word_index) + 1
 
 padded_tokenized_training_x = tensorflow.keras.utils.pad_sequences(tokenized_training_x, padding="post", maxlen=1000)
