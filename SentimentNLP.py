@@ -52,5 +52,5 @@ loss_testing, accuracy_testing = CNN.evaluate(padded_tokenized_testing_x, testin
 
 print("Training vs Testing accuracy: {} vs {}".format(accuracy_training, accuracy_testing))
 
-
-prediction_training
+CNN.save("Trained_CNN_for_sentiment_prediction")
+# prediction_training
