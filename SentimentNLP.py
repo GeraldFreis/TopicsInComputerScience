@@ -36,6 +36,7 @@ from keras import layers
 
 CNN = Sequential()
 CNN.add(layers.Embedding(37500, 50, input_length=1000)) # given by max word len, embedding dim and max len
+# CNN.add(layers.Dense(50, activation="softsign"))
 CNN.add(layers.Conv1D(32, 3, activation="relu")) # convolutional layer
 CNN.add(layers.GlobalMaxPooling1D(trainable=True, dynamic=False))
 CNN.add(layers.Dense(10, activation="relu"))
@@ -52,5 +53,5 @@ loss_testing, accuracy_testing = CNN.evaluate(padded_tokenized_testing_x, testin
 
 print("Training vs Testing accuracy: {} vs {}".format(accuracy_training, accuracy_testing))
 
-CNN.save("Trained_CNN_for_sentiment_prediction")
+# CNN.save("CNN_Non_Dense")
 # prediction_training
