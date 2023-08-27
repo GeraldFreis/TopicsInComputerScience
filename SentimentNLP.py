@@ -36,7 +36,7 @@ from keras import layers
 
 CNN = Sequential()
 CNN.add(layers.Embedding(37500, 50, input_length=1000)) # given by max word len, embedding dim and max len
-# CNN.add(layers.Dense(50, activation="softsign"))
+# CNN.add(layers.Flatten())
 CNN.add(layers.Conv1D(32, 3, activation="relu")) # convolutional layer
 CNN.add(layers.GlobalMaxPooling1D(trainable=True, dynamic=False))
 CNN.add(layers.Dense(10, activation="relu"))
