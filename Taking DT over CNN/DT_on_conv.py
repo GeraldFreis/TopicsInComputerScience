@@ -31,7 +31,6 @@ print("Creating Embedding and Convolutional layer Model")
 model = k.Sequential()
 model.add(CNN.get_layer("embedding"))
 model.add(CNN.get_layer("conv1d"))
-model.add(CNN.get_layer("global_max_pooling1d"))
 outputs = model(padded_tokenized_sentiments[0:50000:1])
 
 # flattening the outputs
