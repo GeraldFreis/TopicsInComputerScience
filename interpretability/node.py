@@ -55,6 +55,13 @@ class Node:
         return
     
     def draw_to_scrn(self, window):
-        ttk.Label(window, text=self.prediction, width=20, wraplength=400, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
-        ttk.Label(window, text=self.text, width=20,  wraplength=400, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+        ttk.Label(window, text=self.prediction, width=20, wraplength=120, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+
+        if(len(self.text) < 100):
+            ttk.Label(window, text=self.text, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+        else:
+            words = self.text[0:100:1]
+            words += "..."
+            ttk.Label(window, text=words, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+
 
