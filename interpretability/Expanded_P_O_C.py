@@ -2,6 +2,7 @@ import pandas as pd
 import tensorflow as tf
 import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
+import tkinter as tk
 
 CNN = keras.models.load_model("../CNN_Non_Dense")
 raw_data = pd.read_csv("IMDB.csv")
@@ -61,4 +62,46 @@ def Tree_Creator(paragraph: str, max_depth: int, current_layer: int, main_list: 
     
     return main_list
 
-print(Tree_Creator(first_paragraph, 2, 1, list()))
+
+tree = Tree_Creator(first_paragraph, 5, 1, list())
+from tkinter import *
+from tkinter import ttk
+
+def TreeVisualiser(layer_list: list, root_str: str, sub_intervals: int)->None:
+    root = tk.Tk()
+    frm = ttk.Frame(root, padding=10)
+    frm.grid()  
+
+    my_scrollbar = tk.Scrollbar(frm, orient='horizontal')
+    canvas = tk.Text(frm, xscrollcommand=my_scrollbar.set)
+    my_scrollbar.pack(side=BOTTOM, fill=X)
+    # canvas['xscrollcommand'] = my_scrollbar.set
+
+    center = 7*sub_intervals
+    ttk.Label(canvas, text="1", font=("Arial", 8)).grid(column=center, row=0)
+    ttk.Label(canvas, text=root_str, width=50, wraplength=400, justify="center", font=("Arial", 8)).grid(column=center, row=1)
+
+    row = 2
+    for i in range(1, sub_intervals):
+        LHS_col = center - i - 2
+        RHS_col = center + i + 2
+
+        indexs = [layer for layer in range(len(layer_list)) if layer_list[layer].get("Layer") == i]
+        for ind in indexs:
+            ttk.Label(canvas, text=layer_list[ind].get("Prediction_A"), width=50, wraplength=400, justify="center").grid(column=LHS_col, row=row)
+            ttk.Label(canvas, text=layer_list[ind].get("A"), width=50, wraplength=400, justify="center").grid(column=LHS_col, row=row+1)
+
+            ttk.Label(canvas, text=layer_list[ind].get("Prediction_B"), width=50, wraplength=400, justify="center").grid(column=RHS_col, row=row)
+            ttk.Label(canvas, text=layer_list[ind].get("B"), width=50, wraplength=400, justify="center").grid(column=RHS_col, row=row+1)
+
+            LHS_col += 2
+            RHS_col -= 2
+
+        row += 2
+    canvas.pack(side=TOP, fill=X)
+    my_scrollbar.config(command=canvas.xview)
+
+    # canvas.pack(side=TOP, fill=BOTH) 
+    root.mainloop()
+
+TreeVisualiser(tree, first_paragraph, 4)
