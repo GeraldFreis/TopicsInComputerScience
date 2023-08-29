@@ -1,35 +1,33 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
-import tkinter as tk
-from tkinter import *
-from tkinter import ttk
+from node import *
 import math as m
-import numpy as np
 
-CNN = keras.models.load_model("../CNN_Non_Dense")
-raw_data = pd.read_csv("IMDB.csv")
 
-"""Function to automate tokenizing and padding"""
 def tokenization(string_to_padd_and_tok: str, tokenizer):
+    """Function to automate tokenizing and padding"""
     tokenized = tokenizer.texts_to_sequences(string_to_padd_and_tok)
     padded = tf.keras.utils.pad_sequences(tokenized, maxlen=1000, padding="post")
     padded = (padded)
     return padded
 
-"""Function to convert sentence list into strings"""
+
 def stringify(sentence_list: list, lower_bound: int, upper_bound: int)->str:
+    """Function to convert sentence list into strings"""
     sentences_in_bounds = [sentence_list[i] for i in range(lower_bound, upper_bound)]
     sub_para = str()
     for sentence in sentences_in_bounds:
         sub_para += sentence + "."
     return sub_para
 
-"""
-Splitting_Predictions takes a paragraph and a max_depth and returns a list of CNN's prediction for each recursive subsection of the paragraph
-"""
+
 def Splitting_Predictions(paragraph: str, max_depth: int, current_layer: int, main_list: list, model)->list:
+    """
+    Splitting_Predictions takes a paragraph and a max_depth and returns a list of CNN's prediction for each recursive subsection of the paragraph
+    """
     # splitting sentences and removing elipses and malfunctions
     sentences = paragraph.split(".")
     sentences = [sentence for sentence in sentences if len(sentence) >= 2]
@@ -90,9 +88,12 @@ def Splitting_Predictions(paragraph: str, max_depth: int, current_layer: int, ma
     return main_list
 
 
-from node import *
 
-def Splitting_Predictions_with_nodes(Root, current_index, tree_list, window, sub_intervals):
+def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_intervals):
+    """
+    Function takes the root node, current index, list of splits, window and subintervals as parameters
+    function returns none, but draws each node to the screen and initialises its child nodes
+    """
     # creating the tree with nodes
     LC_position = 2*current_index + 1
     RC_position = 2*current_index + 2
@@ -112,40 +113,7 @@ def Splitting_Predictions_with_nodes(Root, current_index, tree_list, window, sub
     Root.set_RC(Right_Child_Node)
     # drawing the root to screen
     Root.draw_to_scrn(window)
-    # recursively drawing the children to screen
-    Splitting_Predictions_with_nodes(Left_Child_Node, LC_position, tree_list, window, sub_intervals)
-    Splitting_Predictions_with_nodes(Right_Child_Node, RC_position, tree_list, window, sub_intervals)
+    # recursively drawing the children to screen in a postorder manner kinda
+    Drawing_nodes_to_screen(Left_Child_Node, LC_position, tree_list, window, sub_intervals)
+    Drawing_nodes_to_screen(Right_Child_Node, RC_position, tree_list, window, sub_intervals)
     return
-
-    
-
-
-def readingInTree(window, maxsize, sub_intervals, data_frame, index, model):
-    tree_list = Splitting_Predictions(data_frame.iloc[index].review, sub_intervals, 1, list(), model)
-    Root = Node(int(maxsize/2), 0, None, None, text=data_frame.iloc[index].review, prediction=data_frame.iloc[index].sentiment)
-    Splitting_Predictions_with_nodes(Root, 0, tree_list, window, sub_intervals)
-    return Root
-
-
-def TreeVisualiser(sub_intervals: int, data_frame, index, model)->None:
-    """Function that takes in the root node and sub_interval limits and visualises the tree"""
-
-    max_size = pow(2, sub_intervals+1)
-
-    root = tk.Tk()
-    frm = ttk.Frame(root, padding=10)
-    frm.grid()
-    frm.rowconfigure(max_size*3) 
-    frm.columnconfigure(max_size)
-    my_scrollbar = tk.Scrollbar(frm, orient='horizontal')
-    canvas = tk.Text(frm, xscrollcommand=my_scrollbar.set)
-    my_scrollbar.pack(side=BOTTOM, fill=X)
-    # canvas['xscrollcommand'] = my_scrollbar.set
-    readingInTree(canvas, max_size, sub_intervals, data_frame, index, model)
-    canvas.pack(side=TOP, fill=X)
-    my_scrollbar.config(command=canvas.xview)
-
-    # canvas.pack(side=TOP, fill=BOTH) 
-    root.mainloop()
-
-TreeVisualiser(5, raw_data, 0, CNN)
