@@ -17,9 +17,11 @@ tokenizer = Tokenizer(num_words=len(sentences)) # to tokenize the words for lear
 tokenizer.fit_on_texts(sentences)
 tokenized_sentences = tokenizer.texts_to_sequences(sentences)
 padded_sentences = tf.keras.utils.pad_sequences(tokenized_sentences, padding="post", maxlen=1000)
+print(len(padded_sentences[0]))
+print(len(padded_sentences[1]))
 print(len(padded_sentences))
 # feeding the sentences into the CNN and then getting the predictions
 predictions = CNN.predict(padded_sentences, verbose=1, workers=4)
-print(len(predictions))
+print(predictions[2])
 raw_data["Sentence_CNN_prediction"] = predictions
-raw_data.to_csv("IMDB_sentences_broken_with_predictions.csv", index=False)
+# raw_data.to_csv("IMDB_sentences_broken_with_predictions.csv", index=False)
