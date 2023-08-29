@@ -10,7 +10,7 @@ import numpy as np
 from node import *
 from SplittingPredictions import *
 
-CNN = keras.models.load_model("../CNN_Non_Dense")
+CNN = keras.models.load_model("../../CNN_Non_Dense")
 raw_data = pd.read_csv("IMDB.csv")
 
 
