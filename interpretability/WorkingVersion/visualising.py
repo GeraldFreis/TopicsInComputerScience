@@ -21,25 +21,30 @@ def Composing_Tree(window, maxsize, sub_intervals, data_frame, index, model):
     return Root
 
 
-def TreeVisualiser(sub_intervals: int, data_frame, index, model)->None:
+def TreeVisualiser(depth: int, data_frame, index, model)->None:
     """Function that takes in the root node and sub_interval limits and visualises the tree"""
 
-    max_size = pow(2, sub_intervals+1)
+    max_size = pow(2, depth+1)
 
     root = tk.Tk()
     frm = ttk.Frame(root, padding=10)
     frm.grid()
     frm.rowconfigure(max_size*3) 
     frm.columnconfigure(max_size)
+
     my_scrollbar = tk.Scrollbar(frm, orient='horizontal')
-    canvas = tk.Text(frm, xscrollcommand=my_scrollbar.set)
+    canvas = tk.Canvas(frm, xscrollcommand=my_scrollbar.set)
+
     my_scrollbar.pack(side=BOTTOM, fill=X)
     # canvas['xscrollcommand'] = my_scrollbar.set
-    Composing_Tree(canvas, max_size, sub_intervals, data_frame, index, model)
+
+    Composing_Tree(canvas, max_size, depth, data_frame, index, model)
+
+
     canvas.pack(side=TOP, fill=X)
     my_scrollbar.config(command=canvas.xview)
 
-    # canvas.pack(side=TOP, fill=BOTH) 
     root.mainloop()
+    return
 
-TreeVisualiser(8, raw_data, 0, CNN)
+TreeVisualiser(depth=8, data_frame=raw_data, index=0, model=CNN)
