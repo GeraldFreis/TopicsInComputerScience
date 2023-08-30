@@ -7,11 +7,10 @@ from node import *
 import math as m
 
 
-def tokenization(string_to_padd_and_tok: str, tokenizer):
+def tokenization(string_to_padd_and_tok: list, tokenizer):
     """Function to automate tokenizing and padding"""
     tokenized = tokenizer.texts_to_sequences(string_to_padd_and_tok)
-    padded = tf.keras.utils.pad_sequences(tokenized, maxlen=1000, padding="post")
-    padded = (padded)
+    padded = tf.keras.utils.pad_sequences(tokenized, padding="post", maxlen=1000)
     return padded
 
 
@@ -24,9 +23,9 @@ def stringify(sentence_list: list, lower_bound: int, upper_bound: int)->str:
     return sub_para
 
 
-def Splitting_Predictions(paragraph: str, max_depth: int, current_layer: int, main_list: list, model)->list:
+def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_list: list)->list:
     """
-    Splitting_Predictions takes a paragraph and a max_depth and returns a list of CNN's prediction for each recursive subsection of the paragraph
+    Splitting_texts takes a paragraph and a max_depth and returns a list of CNN's prediction for each recursive subsection of the paragraph
     """
     # splitting sentences and removing elipses and malfunctions
     sentences = paragraph.split(".")
@@ -38,54 +37,40 @@ def Splitting_Predictions(paragraph: str, max_depth: int, current_layer: int, ma
     A = stringify(sentences, 0, int(len(sentences)/2))
     B = stringify(sentences, int(len(sentences)/2), len(sentences))
 
-    tokenizer = Tokenizer(num_words=50000)
-    tokenizer.fit_on_texts(A)
-    tokenizer.fit_on_texts(B)
-
-    # padding the texts and tokenizing
-
-    padded_A = tokenization(A, tokenizer)
-    padded_B = tokenization(B, tokenizer)
-
-    # running the strings through the CNN and getting the prediction
-    prediction_A = model.predict(padded_A, verbose=0)
-
-    prediction_B = model.predict(padded_B, verbose=0)
-    
-    prediction_A_occurrences = dict()
-    for i in range(len(prediction_A)):
-        if prediction_A[i][0] not in prediction_A_occurrences:
-            prediction_A_occurrences[prediction_A[i][0]] = 1
-        else:
-            prediction_A_occurrences[prediction_A[i][0]] += 1
-    
-    prediction_B_occurrences = dict()
-    for i in range(len(prediction_B)):
-        if prediction_B[i][0] not in prediction_B_occurrences:
-            prediction_B_occurrences[prediction_B[i][0]] = 1
-        else:
-            prediction_B_occurrences[prediction_B[i][0]] += 1
-    
-    avg_A = float()
-    for i in range(len(prediction_A)):
-       avg_A += prediction_A[i][0]*(prediction_A_occurrences[prediction_A[i][0]])
-    avg_B = float()
-    for i in range(len(prediction_B)):
-        avg_B += prediction_B[i][0]*(prediction_B_occurrences[prediction_B[i][0]])
-
-    avg_A /= len(prediction_A)*100
-    avg_B /= len(prediction_B)*100
-    # avg_A = float(sum(prediction_A)) / float(len(prediction_A))
-    # avg_B = float(sum(prediction_B)) / float(len(prediction_B)) 
-
-    layer = {"Layer": current_layer, "A": A, "Prediction_A": avg_A, "B": B, "Prediction_B": avg_B}
+   
+    layer = {"Layer": current_layer, "A": A, "Prediction_A": "padded_A", "B": B, "Prediction_B": "padded_B"}
     main_list.append(layer)
 
     # recursively getting the next layers
-    main_list = Splitting_Predictions(A, max_depth, current_layer+1, main_list, model)
-    main_list = Splitting_Predictions(B, max_depth, current_layer+1, main_list, model)
+    main_list = Splitting_texts(A, max_depth, current_layer+1, main_list)
+    main_list = Splitting_texts(B, max_depth, current_layer+1, main_list)
     
     return main_list
+
+def predictions(layer_list: list, model)->list:
+    """Takes a list of layers (dict) returns the same layer list with predictions instead of padded values"""
+    total_prediction_list = list()
+    for layer in layer_list:
+        predict_A = layer.get("A")
+        predict_B = layer.get("B")
+        total_prediction_list.append(predict_A)
+        total_prediction_list.append(predict_B)
+    
+    # tokenizing and padding all of the prediction list
+    tokenizer = Tokenizer(num_words=50000)
+    tokenizer.fit_on_texts(total_prediction_list)
+    total_prediction_list = tokenization(total_prediction_list, tokenizer)
+
+
+    predictions_list = model.predict(total_prediction_list)
+
+    counter = 0
+    for layer in layer_list:
+        layer["Prediction_A"] = predictions_list[counter]
+        layer["Prediction_B"] = predictions_list[counter+1]
+        counter += 2
+    
+    return layer_list
 
 
 
