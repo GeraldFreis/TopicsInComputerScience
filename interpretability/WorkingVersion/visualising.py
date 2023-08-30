@@ -48,3 +48,8 @@ def TreeVisualiser(depth: int, data_frame, index, model)->None:
     return
 
 TreeVisualiser(depth=8, data_frame=raw_data, index=0, model=CNN)
+# from tensorflow.keras.preprocessing.text import Tokenizer
+# tokenizer = Tokenizer(num_words=len(raw_data.iloc[0].review))
+# tokenizer.fit_on_texts(raw_data.iloc[0].review)
+# first_para = tokenization(raw_data.iloc[0].review, tokenizer)
+# print(CNN.predict(first_para))

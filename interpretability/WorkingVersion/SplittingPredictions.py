@@ -49,7 +49,7 @@ def Splitting_Predictions(paragraph: str, max_depth: int, current_layer: int, ma
 
     # running the strings through the CNN and getting the prediction
     prediction_A = model.predict(padded_A, verbose=0)
-
+    print(prediction_A)
     prediction_B = model.predict(padded_B, verbose=0)
     
     prediction_A_occurrences = dict()
