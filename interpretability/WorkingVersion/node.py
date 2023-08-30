@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+from Tooltip import *
 
 # Node class to assist with the creation of the visualisation
 class Node:
@@ -54,14 +55,56 @@ class Node:
         self.child_right = RC
         return
     
-    def draw_to_scrn(self, window):
+    def draw_to_scrn(self, window, subset_char_length):
         ttk.Label(window, text=self.prediction, width=20, wraplength=120, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
 
-        if(len(self.text) < 100):
+        if(len(self.text) < subset_char_length):
             ttk.Label(window, text=self.text, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
         else:
-            words = self.text[0:100:1]
+            words = self.text[0:subset_char_length:1]
             words += "..."
-            ttk.Label(window, text=words, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+            para = ttk.Label(window, text=words, width=20,  wraplength=120, justify="center", font=("Arial", 8))
+            para.grid(column=int(self.x), row=self.y+1)
+            new = ToolTip(para, self.text)
 
+    def draw_root_to_scrn(self, window, subset_char_length):
+        ttk.Label(window, text=self.prediction, width=30, wraplength=150, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+
+        if(len(self.text) < subset_char_length):
+            para = ttk.Label(window, text=self.text, width=30,  wraplength=150, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+
+        else:
+            words = self.text[0:subset_char_length:1]
+            words += "..."
+            para = ttk.Label(window, text=words, width=30,  wraplength=150, justify="center", font=("Arial", 8))
+            para.grid(column=int(self.x), row=self.y+1)
+            new = ToolTip(para, self.text)
+
+def preorder_traversal_text(node):
+    if(node == None): return
+    
+    print("Parent: {}".format(node.get_text()))
+    if node.get_LC() != None:
+        print("L_Child: {}".format(node.get_LC().get_text()))
+    if node.get_RC() != None:
+        print("R_Child: {}".format(node.get_RC().get_text()))
+    
+    preorder_traversal_text(node.get_LC())
+    preorder_traversal_text(node.get_RC())
+
+    return
+
+def preorder_traversal_co_ords(node):
+    if(node == None): return
+    
+    print("Parent: ({},{})".format(node.get_pos_x(), node.get_pos_y()))
+    if node.get_LC() != None:
+        print("L_Child: ({},{})".format(node.get_LC().get_pos_x(), node.get_LC().get_pos_y()))
+    if node.get_RC() != None:
+        print("R_Child: ({},{})".format(node.get_RC().get_pos_x(), node.get_RC().get_pos_y()))
+    
+    preorder_traversal_co_ords(node.get_LC())
+    preorder_traversal_co_ords(node.get_RC())
+
+    return
 
