@@ -13,10 +13,8 @@ from SplittingPredictions import *
 CNN = keras.models.load_model("../../CNN_Non_Dense")
 raw_data = pd.read_csv("IMDB.csv")
 
-
-
-
-def readingInTree(window, maxsize, sub_intervals, data_frame, index, model):
+def Composing_Tree(window, maxsize, sub_intervals, data_frame, index, model):
+    """Function that generates the split predictions for each paragraph, and then composes a tree from the split predictions"""
     tree_list = Splitting_Predictions(data_frame.iloc[index].review, sub_intervals, 1, list(), model)
     Root = Node(int(maxsize/2), 0, None, None, text=data_frame.iloc[index].review, prediction=data_frame.iloc[index].sentiment)
     Drawing_nodes_to_screen(Root, 0, tree_list, window, sub_intervals)
@@ -37,11 +35,11 @@ def TreeVisualiser(sub_intervals: int, data_frame, index, model)->None:
     canvas = tk.Text(frm, xscrollcommand=my_scrollbar.set)
     my_scrollbar.pack(side=BOTTOM, fill=X)
     # canvas['xscrollcommand'] = my_scrollbar.set
-    readingInTree(canvas, max_size, sub_intervals, data_frame, index, model)
+    Composing_Tree(canvas, max_size, sub_intervals, data_frame, index, model)
     canvas.pack(side=TOP, fill=X)
     my_scrollbar.config(command=canvas.xview)
 
     # canvas.pack(side=TOP, fill=BOTH) 
     root.mainloop()
 
-TreeVisualiser(5, raw_data, 0, CNN)
+TreeVisualiser(8, raw_data, 0, CNN)
