@@ -115,23 +115,22 @@ def simpler_drawing(Root, tree_list, window, max_depth):
         - Where n is the max depth, and l is the current layer
         - previous_node_on_layer is 0 for first node and then 2^(n-l) for the second etc.
     """
-    Root.draw_to_scrn(window)
+    subset_char_length_to_display = 400
+    Root.draw_root_to_scrn(window, subset_char_length_to_display+100)
 
     for i in range(1, max_depth):
         # getting all of the layers with the current list
         last_pos = 0
         current_layer_list = list([layer for layer in tree_list if layer.get("Layer") == i])
 
-        for current_val in current_layer_list:
-            print("\n\nLayer {}".format(i))
-            last_pos += pow(2, (max_depth-i-1))
-            node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A"))
-            node.draw_to_scrn(window)
+        for current_val in current_layer_list: # for each layer we want to add the parts of that layer to the right space
+            last_pos += pow(2, (max_depth-i-1)) # adding our current x axis increment which is explained above
+            node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A")) # initialising the node
+            node.draw_to_scrn(window, subset_char_length_to_display-200) # drawing to window
 
-            print("Position of A: {}".format(last_pos))
             last_pos += pow(2, (max_depth-i))
+
             newnode = Node(last_pos, i*3, None, None, current_val.get("B"), current_val.get("Prediction_B"))
-            newnode.draw_to_scrn(window)
-            print("Position of B: {}".format(last_pos))
-            last_pos += pow(2, (max_depth-i-1))
-            print("Layer: {}, depth_adjustment: {}".format(i, pow(2, (max_depth-i-1))))
+            newnode.draw_to_scrn(window, subset_char_length_to_display-200)
+
+            last_pos += pow(2, (max_depth-i-1)) # ensuring that we have ample space to the nodes to our current right
