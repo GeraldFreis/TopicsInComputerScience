@@ -65,3 +65,31 @@ class Node:
             ttk.Label(window, text=words, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
 
 
+def preorder_traversal_text(node):
+    if(node == None): return
+    
+    print("Parent: {}".format(node.get_text()))
+    if node.get_LC() != None:
+        print("L_Child: {}".format(node.get_LC().get_text()))
+    if node.get_RC() != None:
+        print("R_Child: {}".format(node.get_RC().get_text()))
+    
+    preorder_traversal_text(node.get_LC())
+    preorder_traversal_text(node.get_RC())
+
+    return
+
+def preorder_traversal_co_ords(node):
+    if(node == None): return
+    
+    print("Parent: ({},{})".format(node.get_pos_x(), node.get_pos_y()))
+    if node.get_LC() != None:
+        print("L_Child: ({},{})".format(node.get_LC().get_pos_x(), node.get_LC().get_pos_y()))
+    if node.get_RC() != None:
+        print("R_Child: ({},{})".format(node.get_RC().get_pos_x(), node.get_RC().get_pos_y()))
+    
+    preorder_traversal_co_ords(node.get_LC())
+    preorder_traversal_co_ords(node.get_RC())
+
+    return
+

@@ -41,6 +41,8 @@ def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_lis
     layer = {"Layer": current_layer, "A": A, "Prediction_A": "padded_A", "B": B, "Prediction_B": "padded_B"}
     main_list.append(layer)
 
+    # print("Parent: {}\nLeft: {}\n Right: {}\n\n".format(paragraph, A, B))
+
     # recursively getting the next layers
     main_list = Splitting_texts(A, max_depth, current_layer+1, main_list)
     main_list = Splitting_texts(B, max_depth, current_layer+1, main_list)
@@ -79,6 +81,7 @@ def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_interval
     Function takes the root node, current index, list of splits, window and subintervals as parameters
     function returns none, but draws each node to the screen and initialises its child nodes
     """
+
     # creating the tree with nodes
     LC_position = 2*current_index + 1
     RC_position = 2*current_index + 2
@@ -87,7 +90,7 @@ def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_interval
 
     children = tree_list[current_index]
     # getting the position on the screen for the two children nodes
-    L_C_N_position = float(Root.get_pos_x() - pow(2, (sub_intervals - children.get("Layer"))))
+    L_C_N_position = float(Root.get_pos_x() - pow(2, (sub_intervals - children.get("Layer")-1)))
     R_C_N_position = float(m.ceil(Root.get_pos_x() + pow(2, (sub_intervals - children.get("Layer")))))
 
     # setting the children nodes up
@@ -96,9 +99,39 @@ def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_interval
 
     Root.set_LC(Left_Child_Node)
     Root.set_RC(Right_Child_Node)
+
     # drawing the root to screen
     Root.draw_to_scrn(window)
+
     # recursively drawing the children to screen in a postorder manner kinda
     Drawing_nodes_to_screen(Left_Child_Node, LC_position, tree_list, window, sub_intervals)
     Drawing_nodes_to_screen(Right_Child_Node, RC_position, tree_list, window, sub_intervals)
     return
+
+def simpler_drawing(Root, tree_list, window, max_depth):
+    """
+    simpler_drawing takes a list of the tree, the window, and  max depth
+    The function draws to screen where a nodes position is given by previous_node_on_layer+ 2^(n-l)
+        - Where n is the max depth, and l is the current layer
+        - previous_node_on_layer is 0 for first node and then 2^(n-l) for the second etc.
+    """
+    Root.draw_to_scrn(window)
+
+    for i in range(1, max_depth):
+        # getting all of the layers with the current list
+        last_pos = 0
+        current_layer_list = list([layer for layer in tree_list if layer.get("Layer") == i])
+
+        for current_val in current_layer_list:
+            print("\n\nLayer {}".format(i))
+            last_pos += pow(2, (max_depth-i-1))
+            node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A"))
+            node.draw_to_scrn(window)
+
+            print("Position of A: {}".format(last_pos))
+            last_pos += pow(2, (max_depth-i))
+            newnode = Node(last_pos, i*3, None, None, current_val.get("B"), current_val.get("Prediction_B"))
+            newnode.draw_to_scrn(window)
+            print("Position of B: {}".format(last_pos))
+            last_pos += pow(2, (max_depth-i-1))
+            print("Layer: {}, depth_adjustment: {}".format(i, pow(2, (max_depth-i-1))))
