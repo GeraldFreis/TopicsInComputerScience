@@ -14,28 +14,30 @@ def tokenization(string_to_padd_and_tok: list, tokenizer):
     return padded
 
 
-def stringify(sentence_list: list, lower_bound: int, upper_bound: int)->str:
+def stringify(sentence_list: list, lower_bound: int, upper_bound: int, delim)->str:
     """Function to convert sentence list into strings"""
     sentences_in_bounds = [sentence_list[i] for i in range(lower_bound, upper_bound)]
     sub_para = str()
     for sentence in sentences_in_bounds:
-        sub_para += sentence + "."
+        sub_para += sentence + delim
     return sub_para
 
 
-def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_list: list)->list:
+def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_list: list, delim)->list:
     """
-    Splitting_texts takes a paragraph and a max_depth and returns a list of CNN's prediction for each recursive subsection of the paragraph
+    Splitting_texts takes a paragraph and a max_depth, current layer and main list and delimeter to split by and returns a list of CNN's prediction for each recursive subsection of the paragraph
+        - for sentence level splitting delim=" "
+        - for paragraph level splitting delim="."
     """
     # splitting sentences and removing elipses and malfunctions
-    sentences = paragraph.split(".")
+    sentences = paragraph.split(delim)
     sentences = [sentence for sentence in sentences if len(sentence) >= 2]
 
     if(len(sentences) <= 1 or max_depth==current_layer): return main_list
 
     # getting the subsets of the paragraph    
-    A = stringify(sentences, 0, int(len(sentences)/2))
-    B = stringify(sentences, int(len(sentences)/2), len(sentences))
+    A = stringify(sentences, 0, int(len(sentences)/2), delim)
+    B = stringify(sentences, int(len(sentences)/2), len(sentences), delim)
 
    
     layer = {"Layer": current_layer, "A": A, "Prediction_A": "padded_A", "B": B, "Prediction_B": "padded_B"}
@@ -44,8 +46,8 @@ def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_lis
     # print("Parent: {}\nLeft: {}\n Right: {}\n\n".format(paragraph, A, B))
 
     # recursively getting the next layers
-    main_list = Splitting_texts(A, max_depth, current_layer+1, main_list)
-    main_list = Splitting_texts(B, max_depth, current_layer+1, main_list)
+    main_list = Splitting_texts(A, max_depth, current_layer+1, main_list, delim)
+    main_list = Splitting_texts(B, max_depth, current_layer+1, main_list, delim)
     
     return main_list
 
@@ -108,15 +110,15 @@ def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_interval
     Drawing_nodes_to_screen(Right_Child_Node, RC_position, tree_list, window, sub_intervals)
     return
 
-def simpler_drawing(Root, tree_list, window, max_depth):
+def simpler_drawing(Root, tree_list, window, max_depth, wrap_length):
     """
-    simpler_drawing takes a list of the tree, the window, and  max depth
+    simpler_drawing takes a list of the tree, the window, and  max depth, wrap_length
     The function draws to screen where a nodes position is given by previous_node_on_layer+ 2^(n-l)
         - Where n is the max depth, and l is the current layer
         - previous_node_on_layer is 0 for first node and then 2^(n-l) for the second etc.
     """
     subset_char_length_to_display = 400
-    Root.draw_root_to_scrn(window, subset_char_length_to_display+100)
+    Root.draw_root_to_scrn(window, subset_char_length_to_display+100, wrap_length+30)
 
     for i in range(1, max_depth):
         # getting all of the layers with the current list
@@ -126,11 +128,11 @@ def simpler_drawing(Root, tree_list, window, max_depth):
         for current_val in current_layer_list: # for each layer we want to add the parts of that layer to the right space
             last_pos += pow(2, (max_depth-i-1)) # adding our current x axis increment which is explained above
             node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A")) # initialising the node
-            node.draw_to_scrn(window, subset_char_length_to_display-200) # drawing to window
+            node.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length) # drawing to window
 
             last_pos += pow(2, (max_depth-i))
 
             newnode = Node(last_pos, i*3, None, None, current_val.get("B"), current_val.get("Prediction_B"))
-            newnode.draw_to_scrn(window, subset_char_length_to_display-200)
+            newnode.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length)
 
             last_pos += pow(2, (max_depth-i-1)) # ensuring that we have ample space to the nodes to our current right

@@ -15,12 +15,12 @@ raw_data = pd.read_csv("IMDB.csv")
 
 def Composing_Tree(window, maxsize, sub_intervals, data_frame, index, model):
     """Function that generates the split predictions for each paragraph, and then composes a tree from the split predictions"""
-
-    tree_list = Splitting_texts(data_frame.iloc[index].review, sub_intervals, 1, list()) # generating our list of trees 
+    wrap_length = 100
+    tree_list = Splitting_texts(data_frame.iloc[index].review, sub_intervals, 1, list(), delim=".") # generating our list of trees 
     tree_list = predictions(tree_list, model)
     Root = Node(int(maxsize/2), 0, None, None, text=data_frame.iloc[index].review, prediction=data_frame.iloc[index].sentiment) # getting our tree set up with a root node
     # Drawing_nodes_to_screen(Root, 0, tree_list, window, sub_intervals) # setting up our tree structure with our root node and drawing the nodes to screen 
-    simpler_drawing(Root, tree_list, window, sub_intervals)
+    simpler_drawing(Root, tree_list, window, sub_intervals, wrap_length)
 
     return Root
 

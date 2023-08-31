@@ -55,23 +55,23 @@ class Node:
         self.child_right = RC
         return
     
-    def draw_to_scrn(self, window, subset_char_length):
-        ttk.Label(window, text=self.prediction, width=20, wraplength=120, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+    def draw_to_scrn(self, window, subset_char_length, wrap_length):
+        ttk.Label(window, text=self.prediction, width=20, wraplength=wrap_length, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
 
         if(len(self.text) < subset_char_length):
-            ttk.Label(window, text=self.text, width=20,  wraplength=120, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+            ttk.Label(window, text=self.text, width=20,  wraplength=wrap_length, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
         else:
             words = self.text[0:subset_char_length:1]
             words += "..."
-            para = ttk.Label(window, text=words, width=20,  wraplength=120, justify="center", font=("Arial", 8))
+            para = ttk.Label(window, text=words, width=20,  wraplength=wrap_length, justify="center", font=("Arial", 8))
             para.grid(column=int(self.x), row=self.y+1)
             new = ToolTip(para, self.text)
 
-    def draw_root_to_scrn(self, window, subset_char_length):
-        ttk.Label(window, text=self.prediction, width=30, wraplength=150, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+    def draw_root_to_scrn(self, window, subset_char_length, wrap_length):
+        ttk.Label(window, text=self.prediction, width=30, wraplength=wrap_length, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
 
         if(len(self.text) < subset_char_length):
-            para = ttk.Label(window, text=self.text, width=30,  wraplength=150, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
+            para = ttk.Label(window, text=self.text, width=30,  wraplength=wrap_length, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
 
         else:
             words = self.text[0:subset_char_length:1]
