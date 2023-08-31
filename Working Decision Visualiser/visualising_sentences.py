@@ -1,3 +1,8 @@
+"""
+visualising_sentences.py has two functions: The most important is TreeVisualiser_sentences(depth, data_frame, index, model)
+    - The function mentioned produces a tree from a given data entry in the dataframe
+"""
+
 import pandas as pd
 import keras
 import tensorflow as tf
@@ -25,7 +30,7 @@ def Composing_Tree(window, maxsize, sub_intervals, data_frame, index, model):
     return Root
 
 
-def TreeVisualiser(depth: int, data_frame, index, model)->None:
+def TreeVisualiser_sentences(depth: int, data_frame, index, model)->None:
     """Function that takes in the root node and sub_interval limits and visualises the tree"""
 
     max_size = pow(2, depth)
@@ -53,4 +58,4 @@ def TreeVisualiser(depth: int, data_frame, index, model)->None:
     root.mainloop()
     return
 
-TreeVisualiser(depth=5, data_frame=raw_data, index=0, model=CNN)
+# TreeVisualiser_sentences(depth=5, data_frame=raw_data, index=0, model=CNN)
