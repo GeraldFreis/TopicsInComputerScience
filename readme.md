@@ -11,6 +11,12 @@
 - A DT was trained to predict the CNN's predictions and achieved a max accuracy of 0.57 with a depth of 2
 -> InterpretabilityDT.py
 
+- A DT was trained to predict, from each layer of the CNN, the final sentiment and scored a max accuracy of 0.576 for the first dense layer
+- ->Taking Dt Over CNN
+
+- A DT visualisation model was created to break up each paragraph and show the CNN across subsets of that paragraph hence providing an inference based approach
+- Working Decision Visualiser
+
 ## Dependencies:
 * Tensorflow 2.11.0 and Keras 2.11.0
 * Python 3.8
