@@ -33,7 +33,9 @@ def Splitting_texts(paragraph: str, max_depth: int, current_layer: int, main_lis
     sentences = paragraph.split(delim)
     sentences = [sentence for sentence in sentences if len(sentence) >= 2]
 
-    if(len(sentences) <= 1 or max_depth==current_layer): return main_list
+    if(len(sentences) <= 1 or max_depth==current_layer): 
+        main_list.append({"Layer": current_layer, "A": ".", "Prediction_A": "a", "B": ".", "Prediction_B": "b"})
+        return main_list
 
     # getting the subsets of the paragraph    
     A = stringify(sentences, 0, int(len(sentences)/2), delim)
@@ -127,12 +129,19 @@ def simpler_drawing(Root, tree_list, window, max_depth, wrap_length):
 
         for current_val in current_layer_list: # for each layer we want to add the parts of that layer to the right space
             last_pos += pow(2, (max_depth-i-1)) # adding our current x axis increment which is explained above
-            node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A")) # initialising the node
-            node.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length) # drawing to window
+            if (current_val.get("A") != "."):
+                node = Node(last_pos, i*3, None, None, current_val.get("A"), current_val.get("Prediction_A")) # initialising the node
+                node.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length) # drawing to window
+            else:
+                node = Node(last_pos, i*3, None, None, " ", " ") # initialising the node
+                node.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length) # drawing to window
 
             last_pos += pow(2, (max_depth-i))
-
-            newnode = Node(last_pos, i*3, None, None, current_val.get("B"), current_val.get("Prediction_B"))
-            newnode.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length)
+            if (current_val.get("B") != "."):
+                newnode = Node(last_pos, i*3, None, None, current_val.get("B"), current_val.get("Prediction_B"))
+                newnode.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length)
+            else:
+                newnode = Node(last_pos, i*3, None, None, " ", " ")
+                newnode.draw_to_scrn(window, subset_char_length_to_display-200, wrap_length)
 
             last_pos += pow(2, (max_depth-i-1)) # ensuring that we have ample space to the nodes to our current right
