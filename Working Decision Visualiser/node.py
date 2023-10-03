@@ -56,7 +56,16 @@ class Node:
         return
     
     def draw_to_scrn(self, window, subset_char_length, wrap_length):
-        ttk.Label(window, text=self.prediction, width=20, wraplength=wrap_length, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+        colour = "green"
+        try:
+            if(float(self.prediction) <= 0.3):
+                colour = "red"
+            elif(float(self.prediction) <= 0.6 and float(self.prediction) > 0.3):
+                colour="blue"
+        except ValueError: # when we have empty subsections the self.prediction == '', this will raise a valuerror when we try to convert it to a float, we just move on if this is the case
+            pass;
+
+        ttk.Label(window, text=self.prediction[0], width=20, wraplength=wrap_length, justify="center", font=("Arial", 8), foreground=colour).grid(column=int(self.x), row=self.y)
 
         if(len(self.text) < subset_char_length):
             ttk.Label(window, text=self.text, width=20,  wraplength=wrap_length, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
@@ -68,7 +77,16 @@ class Node:
             new = ToolTip(para, self.text)
 
     def draw_root_to_scrn(self, window, subset_char_length, wrap_length):
-        ttk.Label(window, text=self.prediction, width=30, wraplength=wrap_length, justify="center", font=("Arial", 8) ).grid(column=int(self.x), row=self.y)
+        colour = "green"
+        try:
+            if(float(self.prediction) <= 0.3):
+                colour = "red"
+            elif(float(self.prediction) <= 0.6 and float(self.prediction) > 0.3):
+                colour="blue"
+        except ValueError: # when we have empty subsections the self.prediction == '', this will raise a valuerror when we try to convert it to a float, we just move on if this is the case
+            pass;
+
+        ttk.Label(window, text=self.prediction, width=30, wraplength=wrap_length, justify="center", font=("Arial", 8), foreground=colour).grid(column=int(self.x), row=self.y)
 
         if(len(self.text) < subset_char_length):
             para = ttk.Label(window, text=self.text, width=30,  wraplength=wrap_length, justify="center", font=("Arial", 8)).grid(column=int(self.x), row=self.y+1)
