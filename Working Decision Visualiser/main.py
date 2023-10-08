@@ -10,4 +10,4 @@ sentences = pandas.read_csv("IMDB_sentences.csv")
 
 
 TreeVisualiser_sentences(4, sentences, 23, CNN)
-TreeVisualiser_paragraphs(4, paragraphs, 2, CNN)
+# TreeVisualiser_paragraphs(4, paragraphs, 2, CNN)
