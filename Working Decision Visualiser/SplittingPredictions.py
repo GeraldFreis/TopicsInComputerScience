@@ -68,7 +68,7 @@ def predictions(layer_list: list, model)->list:
     total_prediction_list = tokenization(total_prediction_list, tokenizer)
 
 
-    predictions_list = model.predict(total_prediction_list)
+    predictions_list = model.predict(total_prediction_list, verbose=False)
 
     counter = 0
     for layer in layer_list:
@@ -77,7 +77,6 @@ def predictions(layer_list: list, model)->list:
         counter += 2
     
     return layer_list
-
 
 
 def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_intervals):
@@ -103,7 +102,6 @@ def Drawing_nodes_to_screen(Root, current_index, tree_list, window, sub_interval
 
     Root.set_LC(Left_Child_Node)
     Root.set_RC(Right_Child_Node)
-
     # drawing the root to screen
     Root.draw_to_scrn(window)
 
