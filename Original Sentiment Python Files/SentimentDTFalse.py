@@ -54,18 +54,13 @@ raw_tree = DecisionTreeClassifier(max_depth=3).fit(padded_raw_text, raw_y)
 best_test_accuracy = 0
 best_i = 0
 # evaluating the models
-for i in range(1, 90):
-    tree = DecisionTreeClassifier(max_depth=i).fit(padded_train_x, train_y)
-    training_prediction = tree.predict(padded_train_x)
-    test_prediction = tree.predict(padded_test_x)
+# for i in range(1, 90):
+tree = DecisionTreeClassifier().fit(padded_train_x, train_y)
+training_prediction = tree.predict(padded_train_x)
+test_prediction = tree.predict(padded_test_x)
 
-    training_prediction_accuracy = sk.metrics.accuracy_score(train_y, training_prediction, normalize=True)
-    test_prediction_accuracy = sk.metrics.accuracy_score(test_y, test_prediction, normalize=True)
+training_prediction_accuracy = sk.metrics.accuracy_score(train_y, training_prediction, normalize=True)
+test_prediction_accuracy = sk.metrics.accuracy_score(test_y, test_prediction, normalize=True)
 
 
-    print("{}: Training accuracy: {} vs Testing Accuracy {}".format(i, training_prediction_accuracy, test_prediction_accuracy))
-    if(test_prediction_accuracy > best_test_accuracy): 
-        best_test_accuracy = test_prediction_accuracy;
-        best_i=i
-
-print("Best depth was: {} with {}".format(best_i, best_test_accuracy))
+print("Training accuracy: {} vs Testing Accuracy {}".format(training_prediction_accuracy, test_prediction_accuracy))
